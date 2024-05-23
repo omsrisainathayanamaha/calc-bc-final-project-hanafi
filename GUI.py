@@ -1,0 +1,22 @@
+# hello_world.py
+#TODO PROJECT SORTINGINPUT (Andrew done by Friday):
+#A way to select whether they want to go to the calculator or play the game
+#For the calculator (A GUI):
+#Two modes: Function mode and Table mode
+#Function mode lets them input coefficients and constructs a Function object
+#Table mode lets them input how many x-y value pairs through a table that can take input for all of these x-y value pairs and constructs a Table object
+#Appropriate method calls
+#For the game (ANOTHER GUI):
+#Display of a player's current points
+#Option to wager points on a question
+#A way to go to the next round
+#Use the Game class for the back end: use the Game.awardInput(time1, time2, input1, input2) using the class datetime.time
+#Access datetime.time using the statement: from datetime import time. Documentation: https://docs.python.org/3/library/datetime.html
+#Instantiate Player objects with all necessary parameters: create a way to input names.
+#Call the appropriate Game methods (Game.generateFunction(degree)) to create a Function for the game.
+
+import PySimpleGUI as sg
+
+licenseKey = """edy0JJM4aHW8NOlUbUn6NXloVYHIlfwEZOSaIj6cIdknRIlXdRmaVgsLbL3FBJlWcKiwI5sRIVksxBpKYr2iVZu9c22tVUJmR3CdI46dMBTocnxMNujoM4x6MlzDkn2VMTigwXiTTdGVlejMZRWu5zzMZgU5RMlKcMGexWvTepWn1clZbrnURiW8ZrX0JHzUaxWO9yusI6jeocxuL0CcJxOgYNWw1JlWRbmClfyOcB3qQsimOZi7J7TFYyWLhbhfbxmHFO2oInihwzipTUmdFOtXZJUsxMhXcx3XQ4ipOLilJ6SIYGWk1xlZc62ggPihL8CGJbDhbp2a1bwZYQWw5q5RIrjooViTIFitwjiEQq3dV1zgdnGx9wtFZBXyJCJjRGCMI86AIXjTIwxMO8DLMq3UIQizwOiTRNGEFk07ZkUMlkzDck3xVTlOZJC6I863IAj9AA17LxzmISxVLNzRI3wbM5jNQlimLzC9JUELYQXJRNloRKXYhfwIaTXCJUljc9yYIB60Inj8As13LuzJI2xLLGzsI1wBMajTUZiaLbCnJoFRbaWGFRppbAEyFqkwZUH7JvlWcf3RMWimOEisJjzTY1WKhQhCbcmYFK2jcm2RFtpjcHmEF3t6ZDXjNZoYQiGpdDtsYQWylGsaLbmsNrvlbzSrIcsPIlkPl4QMQcWLRgkec8mlVszkc3yLIl6nIvj3Ee3zN3C14kyJNxD8MwuxMwT0gywwLvjqIv1RMxS5JU956830c41f603fde9d6361af62ba392b998c58e0018b96cc99c6e1ab871cb199337cb597c16bad2adfd2271d091b9d87664807b59e319010a2de0d58ddb708c39b883f22a55f7bc983763f810751f91ab40977bde53f416d65ddbf96854d7fa001cdf98e1ad85c49de0622c09029e031856d29d3d168ee0381c001327b2debb85e796d05c5aeacdf5ea856ac803ca07ca1449cd8915b2d167a6d33ad6c5113caabdc08814792d1b99de6e4918e8a5ede88e99d18e6ea34b4ce70b1b6aea89386806580285c6f3984b0c4df91e83f26716c2eaa0a5f438776218458bf7777a45eeb9d315dedad35bba12c4043125405ce4de56901e4a68c7be692134cb1df472e3dd4a6360324b24b50015d24f93dd3fd9573657e62171f6e3d22713ed8dc38abbc8c24ac89605963c65299d50e6cbdaab68efd7fed79db74938f20df0c04b2923e98b1ad78663fc2947881f3c10dad086f6d7ea7ea475c6633570ad126f0b26137cedda8daeff9787670d8ded7b235c8fb0a0ebf0f4e564a59bcd882833f4cee548237f8a1e8e31ec322a201445010cae912dadabf568e56321490004c11d316f5a1a837faab3f091630394f559eb0cf4e5c138c4a015d309db1db2a462ec10d5ba7bbbcb174c2eb0bfc57f1832e845ece4c9ca754b928f4a2a09681aade700657e08e70b3b1901069762818a8965df3ca7af4e5b443b32c261fffab4bdb509357"""
+#USE THIS LICENSE KEY FOR THE GUI
+sg.Window(title="Hello World", layout=[[]], margins=(100, 50)).read()
