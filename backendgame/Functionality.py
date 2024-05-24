@@ -43,28 +43,28 @@ class Function:
 #step: a float that represents the width of one rectangle
 #start: the first number the Rienmann Sum should start to be evaluated at. In [a,b], a.
 #end: the last number the Rienmann Sum should be evaluated at. In [a,b], b.
-def rightRienmannSum(f:Function, step:float, start:int, end:int): #Certified As Working: Returns a floating point number which is the Right Rienmann Sum of f from start to end.
+def rightRienmannSum(f:Function, step:float, start:float, end:float): #Certified As Working: Returns a floating point number which is the Right Rienmann Sum of f from start to end.
     currentSum = 0
     for i in np.arange(start+step,end+step,step):
         x = f.evalAtPoint((i))
         
         currentSum += x * step 
     return currentSum
-def leftRienmannSum(f:Function, step:float, start:int, end:int): #Certified As Working: Returns a floating point number that is the left Rienmann sum of f from start to end.
+def leftRienmannSum(f:Function, step:float, start:float, end:float): #Certified As Working: Returns a floating point number that is the left Rienmann sum of f from start to end.
     
     currentSum = 0
     for i in np.arange(start,end,step):
         x = f.evalAtPoint(i)
         currentSum += x * step 
     return currentSum
-def midpointRienmannSum(f:Function, step:float, start:int, end:int): #Certified As Working: Returns a floating point number that is the midpoint Rienmann sum of f from start to end.
+def midpointRienmannSum(f:Function, step:float, start:float, end:float): #Certified As Working: Returns a floating point number that is the midpoint Rienmann sum of f from start to end.
     
     currentSum = 0
     for i in np.arange((start+start+step)/2,(end+end+step)/2,step):
         x = f.evalAtPoint(i)
         currentSum += x*step
     return currentSum     
-def trapezoidalRienmannSum(f:Function, step:float, start:int, end:int): #Certified As Working: Returns a floating point number that is the trapezoidal Rienmann sum of f from start to end.
+def trapezoidalRienmannSum(f:Function, step:float, start:float, end:float): #Certified As Working: Returns a floating point number that is the trapezoidal Rienmann sum of f from start to end.
     currentSum = 0
     x = 0
     for i in np.arange(start+step,end+step,step):
@@ -76,7 +76,7 @@ def trapezoidalRienmannSum(f:Function, step:float, start:int, end:int): #Certifi
 #Precondition: Must have a PyPlot created. Must not be shown. Call the plt.ion() method after this runs.
 #TODO add the areas to the middle of each shape (We'll figure it out later)
 #TODO make colors uniform in rectangle graphs (Andrew)
-def leftRectangleCreator(f:Function, step:float, start:int, end:int):
+def leftRectangleCreator(f:Function, step:float, start:float, end:float):
     yVerLine = []
     xVerLine1 = []
     xHorLine1 = []
@@ -100,7 +100,7 @@ def leftRectangleCreator(f:Function, step:float, start:int, end:int):
         #Now adding the area of each rectangle to its center
         #a = fig.add_subplot()
         #fig.text(i/2, x/2, str(step*x))
-def rightRectangleCreator(f:Function, step:float, start:int, end:int):
+def rightRectangleCreator(f:Function, step:float, start:float, end:float):
     yVerLine = []
     xVerLine1 = []
     xHorLine1 = []
@@ -124,7 +124,7 @@ def rightRectangleCreator(f:Function, step:float, start:int, end:int):
 
         #a = fig.add_subplot()
         #fig.text(i/2, x/2, str(step*x))
-def midpointRectangleCreator(f:Function,step:float,start:int,end:int):
+def midpointRectangleCreator(f:Function,step:float,start:float,end:float):
     yVerLine = []
     xVerLine1 = []
     xHorLine1 = []
@@ -148,7 +148,7 @@ def midpointRectangleCreator(f:Function,step:float,start:int,end:int):
 
         #a = fig.add_subplot()
        # fig.text(i/2, x/2, str(step*x))
-def trapezoidCreator(f:Function, step:float, start:int, end:int):
+def trapezoidCreator(f:Function, step:float, start:float, end:float):
     yVerLine1 = []
     yVerLine2 = []
     xVerLine1 = []
@@ -176,18 +176,18 @@ def trapezoidCreator(f:Function, step:float, start:int, end:int):
         #fig.text(i/2, y1/2, str(step/2*(y1+y2)))
 
 #Tester
-a = int(input("How many degrees in the polynomial?"))
-numArr = []
-for i in range(a,-1,-1):
-    numArr.append(int(input("Enter the "+str(i)+"th degree.")))
-start = int(input("What is the starting value for the integral to be evaluated? "))
-end = int(input("What is the ending value for the integral to be evaluated? "))
-step = float(input("What is the step of the integral? "))
-figure = plt.figure()
-x = np.linspace(start, end, 100)
-plt.plot(x,Function(numArr, len(numArr)-1).multipleEvalAtPoint(x), '-')
+#a = int(input("How many degrees in the polynomial?"))
+#numArr = []
+#for i in range(a,-1,-1):
+    #numArr.append(int(input("Enter the "+str(i)+"th degree.")))
+#start = float(input("What is the starting value for the integral to be evaluated? "))
+#end = float(input("What is the ending value for the integral to be evaluated? "))
+#step = float(input("What is the step of the integral? "))
+#figure = plt.figure()
+#x = np.linspace(start, end, 100)
+#plt.plot(x,Function(numArr, len(numArr)-1).multipleEvalAtPoint(x), '-')
 #leftRectangleCreator(Function(numArr, len(numArr)-1), step, start, end, figure)
 #rightRectangleCreator(Function(numArr, len(numArr)-1), step, start, end, figure)
 #midpointRectangleCreator(Function(numArr, len(numArr)-1), step, start, end, figure)
-trapezoidCreator(Function(numArr, len(numArr)-1), step, start, end, figure)
-plt.ion()
+#trapezoidCreator(Function(numArr, len(numArr)-1), step, start, end, figure)
+#plt.ion()

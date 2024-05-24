@@ -176,21 +176,21 @@ def tableTrapezoids(t, startIndex, endIndex):
 
         
 #Tester
-xArr = [1,2,3,4,5]
-yArr = [0,4,16,36,64]
-t = Table(xArr,yArr)
-startIndex = 0
-endIndex = len(xArr)-1
-print("Left", tableLeftRienmannSum(t, startIndex, endIndex)) #works
-print("Right", tableRightRienmannSum(t, startIndex, endIndex)) #works
-print("Midpoint", tableMidpointRienmannSum(t, startIndex,endIndex)) #works
-print("Trapezoidal", tableTrapezoidalRienmannSum(t, startIndex,endIndex)) #works
-t.plot()
-tableRightRectangle(t, startIndex, endIndex)
-tableLeftRectangle(t, startIndex, endIndex) #RUNS BUT STOPS AT 4 IN THE GRAPH
-tableMidpointRectangle(t, startIndex, endIndex)
-tableTrapezoids(t, startIndex,endIndex)
-plt.ion()
+#xArr = [1,2,3,4,5]
+#yArr = [0,4,16,36,64]
+#t = Table(xArr,yArr)
+#startIndex = 0
+#endIndex = len(xArr)-1
+#print("Left", tableLeftRienmannSum(t, startIndex, endIndex)) #works
+#print("Right", tableRightRienmannSum(t, startIndex, endIndex)) #works
+#print("Midpoint", tableMidpointRienmannSum(t, startIndex,endIndex)) #works
+#print("Trapezoidal", tableTrapezoidalRienmannSum(t, startIndex,endIndex)) #works
+#t.plot()
+#tableRightRectangle(t, startIndex, endIndex)
+#tableLeftRectangle(t, startIndex, endIndex) #RUNS BUT STOPS AT 4 IN THE GRAPH
+#tableMidpointRectangle(t, startIndex, endIndex)
+#tableTrapezoids(t, startIndex,endIndex)
+#plt.ion()
         
     
 
