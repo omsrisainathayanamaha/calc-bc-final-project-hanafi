@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function doSubmit() {
+            var selectMe = document.getElementById('selectme');
+            var value = selectMe.value;
+            if (value == 0) {
+                createTable(parseInt(prompt('How many elements?')));
+            }
+        }
+
+        function createTableRow(id1, id2) {
+            var elementTr = document.createElement('tr');
+            var template1 = document.createElement('td');
+            var input1 = document.createElement('input');
+            input1.type = 'text';
+            input1.id = id1;
+            input1.value = Math.round(Math.random() * 100);
+            template1.appendChild(input1);
+            elementTr.appendChild(template1);
+            var template2 = document.createElement('td');
+            var input2 = document.createElement('input');
+            input2.type = 'text';
+            input2.id = id2;
+            input2.value = Math.round(Math.random() * 100);
+            template2.appendChild(input2);
+            elementTr.appendChild(template2);
+            return elementTr;
+        }
+
+        function createTable(numElements) {
+            for (var i = 1; i <= numElements; i++) {
+                document.getElementById('theInputTable').appendChild(createTableRow('x' + i, 'y' + i));
+            }
+        }
+
+        function sendData() {
+            var table = document.getElementById('theInputTable');
+            var inputs = table.getElementsByTagName('input');
+            var data = {};
+
+            for (var i = 0; i < inputs.length; i += 2) {
+                var xValue = inputs[i].value;
+                var yValue = inputs[i + 1].value;
+                data['x' + (i / 2 + 1)] = xValue;
+                data['y' + (i / 2 + 1)] = yValue;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submit", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert(xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
+    </script>
+</head>
+<body>
+    <h1>Select an option</h1>
+    <br/>
+    <select id='selectme'>
+        <option value=0>Calculator</option>
+        <option value=1>Game</option>
+    </select><br/>
+    <button onclick='doSubmit()'>Submit!</button>
+    <br/><br/>
+    <table id='theInputTable'>
+        <tr>
+            <th>x</th>
+            <th>y</th>
+        </tr>
+    </table>
+    <br/>
+    <button onclick='sendData()'>Send Data</button>
+</body>
+</html>
