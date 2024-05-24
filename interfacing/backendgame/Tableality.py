@@ -9,11 +9,19 @@ import numpy as np
 
 class Table: #A class that represents a table of values.
     def __init__(self, xArr:list[float], yArr:list[float]):
+        yArrOld = yArr
+        xArrOld = xArr
+        yArrNew = []
         xArr.sort()
-        yArr.sort()
+        for i in xArr:
+            index = xArrOld.index(i)
+            if xArrOld[index] == i:
+                yArrNew.append(yArrOld[index])
+                yArrOld.pop(index)
+            
         self.xValues:list[float] = xArr
        # print(xArr, self.xValues)
-        self.yValues:list[float] = yArr
+        self.yValues:list[float] = yArrNew
         #print(yArr, self.yValues)
 
         
