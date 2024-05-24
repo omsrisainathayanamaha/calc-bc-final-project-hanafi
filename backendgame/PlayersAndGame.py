@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import math.Functionality as Functionality
+import Functionality as Functionality
 #import Tableality
 from datetime import time
 from matplotlib import pyplot as plt
