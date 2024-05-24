@@ -9,7 +9,7 @@ import json
 import backendgame.Tableality as Tableality
 from backendgame.Tableality import Table
 
-hostName = "localhost"
+hostName = "10.7.131.245" #replace with the ip of the runner
 serverPort = 8080
 
 class MyServer(BaseHTTPRequestHandler):
@@ -38,6 +38,7 @@ class MyServer(BaseHTTPRequestHandler):
             #self.end_headers()
             #response = {"status": "success", "xArr": xArr, "yArr": yArr}
             #self.wfile.write(bytes(json.dumps(response), "utf-8"))
+            myTable.plot()
             Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
             self.send_header("Content-type", "text/html")
             self.end_headers()
