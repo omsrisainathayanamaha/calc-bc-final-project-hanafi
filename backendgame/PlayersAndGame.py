@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 #Create a Game.awardInput(time1, time2, input1, input2)
 class Game:
     
-    def __init__(self,player1, player2):
+    def __init__(self,player1:Player, player2:Player):
         #self.playerWithTurnNumber = 1
         self.player1:Player = player1
         self.player2:Player = player2
@@ -31,8 +31,8 @@ class Game:
         self.player2.setMyGame(self)
         #self.player3.setMyGame(self)
         #self.player4.setMyGame(self)
-    def generateFunction(self, degree):
-        self.myFunction = np.randn(degree+1)
+    def generateFunction(self, degree:int):
+        self.myFunction = Functionality.Function(np.randn(degree+1), degree)
     def setRandomCorrectAnswer(self):
         self.myCorrectAnswer = random.randint(0,3)
     #Precondition: setRandomCorrectAnswer() and generateFunction(degree) must have been called before this method is called
@@ -58,10 +58,11 @@ class Game:
             self.currentBet = random.randint(1, self.player1.points)
         else:
             self.currentBet = random.randint(1, self.player2.points)
+        
     #Preconditions: plot(), generateFunction(degree), and setRandomCorrectAnswer() have all ran before awardInput(time1, time2, input1, input2)
     #Parameters: time1 is a time object of class time that represents when player1 buzzed in, time2 is a time object of class time that represents when player2 buzzed in
     #input1 is an integer on [0,3] that represents the answer of player1, input2 is an integer on [0,3] that represents the answer of player2
-    def awardInput(self, time1:time, time2:time, input1:int, input2:int):
+    def awardInput(self, time1=time, time2=time, input1=int, input2=int):
         isOneCorrect = self.isRightAnswer(input1)
         isTwoCorrect = self.isRightAnswer(input2)
         areBothCorrect = isOneCorrect and isTwoCorrect
@@ -95,7 +96,7 @@ class Player:
         self.id = 0 #the player's turn in the game
         self.points = 100 #how many points the player has
         self.myGame = None
-    def setId(self, newId): #Sets the player id to newId
+    def setId(self, newId:int): #Sets the player id to newId
         self.id = newId
     def setMyGame(self, myGame:Game): #Sets the myGame attribute of the player to myGame parameter.
         self.myGame = myGame

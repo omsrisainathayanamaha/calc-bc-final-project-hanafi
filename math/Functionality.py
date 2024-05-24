@@ -16,7 +16,7 @@ import numpy as np
 #For the example x^3 + 3x^2 - x/6 + 1,
 #[1,3,-1/6,1] would be the int[].
 class Function:
-    def __init__(self,intarr:list[int], degree:int): # Function constructor
+    def __init__(self,intarr, degree:int): # Function constructor
         self.expression = intarr
         self.degree = degree
     def evalAtPoint(self, x:float): # Evaluates the Function at point x and returns the value
