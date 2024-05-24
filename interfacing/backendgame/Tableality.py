@@ -17,7 +17,7 @@ class Table: #A class that represents a table of values.
             index = xArrOld.index(i)
             if xArrOld[index] == i:
                 yArrNew.append(yArrOld[index])
-                yArrOld.pop(index)
+                #yArrOld.pop(index)
             
         self.xValues:list[float] = xArr
        # print(xArr, self.xValues)
