@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 #Create a Game.awardInput(time1, time2, input1, input2)
 class Game:
     
-    def __init__(self,player1:Player, player2:Player):
+    def __init__(self,player1, player2):
         #self.playerWithTurnNumber = 1
         self.player1:Player = player1
         self.player2:Player = player2
