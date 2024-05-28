@@ -38,6 +38,7 @@
         function sendData() {
             var table = document.getElementById('theInputTable');
             var inputs = table.getElementsByTagName('input');
+            var whichRienmann = document.getElementById("theSelection");
             var data = {};
 
             for (var i = 0; i < inputs.length; i += 2) {
@@ -46,13 +47,16 @@
                 data['x' + (i / 2 + 1)] = xValue;
                 data['y' + (i / 2 + 1)] = yValue;
             }
+            data['rienmannSelection'] = whichRienmann.value;
 
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/submit", true);
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert(xhr.responseText);
+                    //var element = document.getElementById('results')
+                    document.write(xhr.responseText);
+                    
                 }
             };
             xhr.send(JSON.stringify(data));
@@ -75,6 +79,13 @@
         </tr>
     </table>
     <br/>
+    <select id = "theSelection">
+        <option value = 0>Left Rienmann Sum</option>
+        <option value = 1>Right Rienmann Sum</option>
+        <option value = 2>Midpoint Rienmann Sum</option>
+        <option value = 3>Trapezoidal Rienmann Sum</option>
+    </select>
     <button onclick='sendData()'>Send Data</button>
+    <div id = 'results'></div>
 </body>
 </html>

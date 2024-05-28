@@ -26,9 +26,9 @@ class MyServer(BaseHTTPRequestHandler):
             data = json.loads(post_data)
             print("Received data:", data)  # Here you can process the data as needed
             
-            xArr, yArr = self.parse_data(data)
-            print("xArr:", xArr)
-            print("yArr:", yArr)
+            xArr, yArr, id = self.parse_data(data)
+            #print("xArr:", xArr)
+            #print("yArr:", yArr)
             myTable = Table(xArr, yArr)
             startIndex = 0
             endIndex = len(xArr)-1
@@ -39,7 +39,16 @@ class MyServer(BaseHTTPRequestHandler):
             #response = {"status": "success", "xArr": xArr, "yArr": yArr}
             #self.wfile.write(bytes(json.dumps(response), "utf-8"))
             myTable.plot()
-            Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
+            match id:
+                case 0:
+                    Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
+                case 1:
+                    Tableality.tableRightRectangle(myTable, startIndex, endIndex)
+                case 2:
+                    Tableality.tableMidpointRectangle(myTable, startIndex, endIndex)
+                case 3:
+                    Tableality.tableTrapezoids(myTable, startIndex, endIndex)
+            #Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
             self.send_header("Content-type", "text/html")
             self.end_headers()
             self.wfile.write (bytes(mpld3.fig_to_html(figure, d3_url=None, mpld3_url=None, no_extras=False, template_type='general', figid=None, use_http=False), "utf-8"))
@@ -50,12 +59,15 @@ class MyServer(BaseHTTPRequestHandler):
     def parse_data(self, data):
         xArr = []
         yArr = []
+        rienmannId = 0
         for key, value in data.items():
             if key.startswith('x'):
                 xArr.append(float(value))
             elif key.startswith('y'):
                 yArr.append(float(value))
-        return xArr, yArr
+            elif key.startswith('rienmann'):
+                rienmannId = int(value)
+        return xArr, yArr, rienmannId
 
     def html_content(self):
         return """<!DOCTYPE html>
@@ -98,6 +110,7 @@ class MyServer(BaseHTTPRequestHandler):
         function sendData() {
             var table = document.getElementById('theInputTable');
             var inputs = table.getElementsByTagName('input');
+            var whichRienmann = document.getElementById("theSelection");
             var data = {};
 
             for (var i = 0; i < inputs.length; i += 2) {
@@ -106,6 +119,7 @@ class MyServer(BaseHTTPRequestHandler):
                 data['x' + (i / 2 + 1)] = xValue;
                 data['y' + (i / 2 + 1)] = yValue;
             }
+            data['rienmannSelection'] = whichRienmann.value;
 
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/submit", true);
@@ -137,6 +151,12 @@ class MyServer(BaseHTTPRequestHandler):
         </tr>
     </table>
     <br/>
+    <select id = "theSelection">
+        <option value = 0>Left Rienmann Sum</option>
+        <option value = 1>Right Rienmann Sum</option>
+        <option value = 2>Midpoint Rienmann Sum</option>
+        <option value = 3>Trapezoidal Rienmann Sum</option>
+    </select>
     <button onclick='sendData()'>Send Data</button>
     <div id = 'results'></div>
 </body>
