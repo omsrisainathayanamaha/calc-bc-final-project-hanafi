@@ -14,14 +14,14 @@
             var elementTr = document.createElement('tr');
             var template1 = document.createElement('td');
             var input1 = document.createElement('input');
-            input1.type = 'text';
+            input1.type = 'number';
             input1.id = id1;
             input1.value = Math.round(Math.random() * 100);
             template1.appendChild(input1);
             elementTr.appendChild(template1);
             var template2 = document.createElement('td');
             var input2 = document.createElement('input');
-            input2.type = 'text';
+            input2.type = 'number';
             input2.id = id2;
             input2.value = Math.round(Math.random() * 100);
             template2.appendChild(input2);
@@ -61,6 +61,17 @@
             };
             xhr.send(JSON.stringify(data));
         }
+        function startGame()
+        {
+            var name1Element = document.getElementById("player1Name"); //the element for name1
+            var name2Element = document.getElementById("player2Name"); //the element for name2
+            
+            var name1 = name1Element.value;
+            var name2 = name2Element.value;
+
+            
+            
+        }
     </script>
 </head>
 <body>
@@ -87,5 +98,13 @@
     </select>
     <button onclick='sendData()'>Send Data</button>
     <div id = 'results'></div>
+    <br/>
+    <form id = "getTheData">
+        Enter Player 1 Name: <input id = "player1Name" type = "text"/>
+        <br/>
+        Enter Player 2 Name: <input id = "player2Name" type = "text"/>
+        <br/>
+        <button onclick = "startGame()">Start The Game!</button>
+    </form>
 </body>
 </html>
