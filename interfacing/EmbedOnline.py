@@ -8,8 +8,9 @@ from matplotlib import pyplot as plt
 import json
 import backendgame.Tableality as Tableality
 from backendgame.Tableality import Table
+import os
 
-hostName = "10.7.131.245" #replace with the ip of the runner
+hostName = "localhost" #replace with the ip of the runner
 serverPort = 8080
 
 class MyServer(BaseHTTPRequestHandler):
@@ -26,9 +27,9 @@ class MyServer(BaseHTTPRequestHandler):
             data = json.loads(post_data)
             print("Received data:", data)  # Here you can process the data as needed
             
-            xArr, yArr = self.parse_data(data)
-            print("xArr:", xArr)
-            print("yArr:", yArr)
+            xArr, yArr, id = self.parse_data(data)
+            #print("xArr:", xArr)
+            #print("yArr:", yArr)
             myTable = Table(xArr, yArr)
             startIndex = 0
             endIndex = len(xArr)-1
@@ -39,10 +40,27 @@ class MyServer(BaseHTTPRequestHandler):
             #response = {"status": "success", "xArr": xArr, "yArr": yArr}
             #self.wfile.write(bytes(json.dumps(response), "utf-8"))
             myTable.plot()
-            Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
+            match id:
+                case 0:
+                    Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
+                case 1:
+                    Tableality.tableRightRectangle(myTable, startIndex, endIndex)
+                case 2:
+                    Tableality.tableMidpointRectangle(myTable, startIndex, endIndex)
+                case 3:
+                    Tableality.tableTrapezoids(myTable, startIndex, endIndex)
+            #Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write (bytes(mpld3.fig_to_html(figure, d3_url=None, mpld3_url=None, no_extras=False, template_type='general', figid=None, use_http=False), "utf-8"))
+            htmlToUse = mpld3.fig_to_html(figure, d3_url=None, mpld3_url=None, no_extras=False, template_type='general', figid=None, use_http=False) 
+            htmlToUse = htmlToUse.replace("<html>", "")
+            htmlToUse = htmlToUse.replace("</html>", "")
+            htmlToUse=htmlToUse.replace("<head>", "")
+            htmlToUse=htmlToUse.replace("</head>", "")
+            htmlToUse=htmlToUse.replace("<body>", "")
+            htmlToUse=htmlToUse.replace("</body>", "")
+            plt.ion()
+            self.wfile.write (bytes(htmlToUse,"utf-8"))
 
             
             
@@ -50,97 +68,29 @@ class MyServer(BaseHTTPRequestHandler):
     def parse_data(self, data):
         xArr = []
         yArr = []
+        rienmannId = 0
         for key, value in data.items():
             if key.startswith('x'):
                 xArr.append(float(value))
             elif key.startswith('y'):
                 yArr.append(float(value))
-        return xArr, yArr
+            elif key.startswith('rienmann'):
+                rienmannId = int(value)
+        return xArr, yArr, rienmannId
 
     def html_content(self):
-        return """<!DOCTYPE html>
-<html>
-<head>
-    <script>
-        function doSubmit() {
-            var selectMe = document.getElementById('selectme');
-            var value = selectMe.value;
-            if (value == 0) {
-                createTable(parseInt(prompt('How many elements?')));
-            }
-        }
+        # Ensure the correct path to the file
+        file_path = os.path.join(os.path.dirname(__file__), 'index.html')
 
-        function createTableRow(id1, id2) {
-            var elementTr = document.createElement('tr');
-            var template1 = document.createElement('td');
-            var input1 = document.createElement('input');
-            input1.type = 'text';
-            input1.id = id1;
-            input1.value = Math.round(Math.random() * 100);
-            template1.appendChild(input1);
-            elementTr.appendChild(template1);
-            var template2 = document.createElement('td');
-            var input2 = document.createElement('input');
-            input2.type = 'text';
-            input2.id = id2;
-            input2.value = Math.round(Math.random() * 100);
-            template2.appendChild(input2);
-            elementTr.appendChild(template2);
-            return elementTr;
-        }
-
-        function createTable(numElements) {
-            for (var i = 1; i <= numElements; i++) {
-                document.getElementById('theInputTable').appendChild(createTableRow('x' + i, 'y' + i));
-            }
-        }
-
-        function sendData() {
-            var table = document.getElementById('theInputTable');
-            var inputs = table.getElementsByTagName('input');
-            var data = {};
-
-            for (var i = 0; i < inputs.length; i += 2) {
-                var xValue = inputs[i].value;
-                var yValue = inputs[i + 1].value;
-                data['x' + (i / 2 + 1)] = xValue;
-                data['y' + (i / 2 + 1)] = yValue;
-            }
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/submit", true);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    //var element = document.getElementById('results')
-                    document.write(xhr.responseText);
-                    
-                }
-            };
-            xhr.send(JSON.stringify(data));
-        }
-    </script>
-</head>
-<body>
-    <h1>Select an option</h1>
-    <br/>
-    <select id='selectme'>
-        <option value=0>Calculator</option>
-        <option value=1>Game</option>
-    </select><br/>
-    <button onclick='doSubmit()'>Submit!</button>
-    <br/><br/>
-    <table id='theInputTable'>
-        <tr>
-            <th>x</th>
-            <th>y</th>
-        </tr>
-    </table>
-    <br/>
-    <button onclick='sendData()'>Send Data</button>
-    <div id = 'results'></div>
-</body>
-</html>"""
+        # Read the file contents safely
+        try:
+            with open(file_path, "r") as file:
+                content = file.read()
+            return content
+        except FileNotFoundError:
+            return "File not found."
+        except Exception as e:
+            return f"An error occurred: {e}"
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)

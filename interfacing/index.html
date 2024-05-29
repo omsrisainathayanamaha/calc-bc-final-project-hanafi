@@ -2,26 +2,56 @@
 <html>
 <head>
     <script>
+        const HIDDEN = "display:none;";
+        const SHOWN = "display:block;";
         function doSubmit() {
             var selectMe = document.getElementById('selectme');
+            var inputTable = document.getElementById('theInputTable');
+            var rienmannSelection = document.getElementById("theSelection");
+            var sendDataButton = document.getElementById("sendDataButton");
+            var playerNameTable = document.getElementById("getTheData");
+            var startGameButton = document.getElementById("startGameButton");
+            var submitButton = document.getElementById("submitOptions");
+            var mainHeader = document.getElementById("headerMain");
+            var calculatorRowAmountGetter = document.getElementById("getRowAmount");
             var value = selectMe.value;
             if (value == 0) {
-                createTable(parseInt(prompt('How many elements?')));
+                selectMe.style = HIDDEN;
+                calculatorRowAmountGetter.style = SHOWN;
+                submitButton.style = HIDDEN;
             }
+        }
+        function calculatorStarterTwo(value)
+        {
+            var selectMe = document.getElementById('selectme');
+            var inputTable = document.getElementById('theInputTable');
+            var rienmannSelection = document.getElementById("theSelection");
+            var sendDataButton = document.getElementById("sendDataButton");
+            var playerNameTable = document.getElementById("getTheData");
+            var startGameButton = document.getElementById("startGameButton");
+            var submitButton = document.getElementById("submitOptions");
+            var mainHeader = document.getElementById("headerMain");
+            var calculatorRowAmountGetter = document.getElementById("getRowAmount");
+            createTable(parseInt(value));
+            inputTable.style = SHOWN;
+            rienmannSelection.style = SHOWN;
+            sendDataButton.style = SHOWN;
+            calculatorRowAmountGetter.style = HIDDEN;
+            
         }
 
         function createTableRow(id1, id2) {
             var elementTr = document.createElement('tr');
             var template1 = document.createElement('td');
             var input1 = document.createElement('input');
-            input1.type = 'text';
+            input1.type = 'number';
             input1.id = id1;
             input1.value = Math.round(Math.random() * 100);
             template1.appendChild(input1);
             elementTr.appendChild(template1);
             var template2 = document.createElement('td');
             var input2 = document.createElement('input');
-            input2.type = 'text';
+            input2.type = 'number';
             input2.id = id2;
             input2.value = Math.round(Math.random() * 100);
             template2.appendChild(input2);
@@ -34,10 +64,20 @@
                 document.getElementById('theInputTable').appendChild(createTableRow('x' + i, 'y' + i));
             }
         }
+        function reload(id){
+    var container = document.getElementById(id);
+    var content = container.innerHTML;
+    container.innerHTML = "";
+    container.innerHTML= content; 
+    
+   //this line is to watch the result in console , you can remove it later	
+    console.log("Refreshed"); 
+}
 
         function sendData() {
             var table = document.getElementById('theInputTable');
             var inputs = table.getElementsByTagName('input');
+            var whichRienmann = document.getElementById("theSelection");
             var data = {};
 
             for (var i = 0; i < inputs.length; i += 2) {
@@ -46,35 +86,66 @@
                 data['x' + (i / 2 + 1)] = xValue;
                 data['y' + (i / 2 + 1)] = yValue;
             }
+            data['rienmannSelection'] = whichRienmann.value;
 
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/submit", true);
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert(xhr.responseText);
+                    var element = document.getElementById('theBody');
+                    element.innerHTML += (xhr.responseText);
+                    reload('theBody');
+                    
                 }
             };
             xhr.send(JSON.stringify(data));
         }
+        function startGame()
+        {
+            var name1Element = document.getElementById("player1Name"); //the element for name1
+            var name2Element = document.getElementById("player2Name"); //the element for name2
+            
+            var name1 = name1Element.value;
+            var name2 = name2Element.value;
+
+            
+            
+        }
     </script>
 </head>
-<body>
-    <h1>Select an option</h1>
+<body id = "theBody">
+    <h1 id = "headerMain">Select an option</h1>
     <br/>
     <select id='selectme'>
         <option value=0>Calculator</option>
         <option value=1>Game</option>
     </select><br/>
-    <button onclick='doSubmit()'>Submit!</button>
+    <button onclick='doSubmit()' id = "submitOptions">Submit!</button>
+    <p id = "getRowAmount" style = "display:none;"><input id = "numberOfElements"/><br/><button onclick = "calculatorStarterTwo(document.getElementById('numberOfElements').value)">Submit!</button></p>
     <br/><br/>
-    <table id='theInputTable'>
+    <table id='theInputTable' style = "display:none;">
         <tr>
             <th>x</th>
             <th>y</th>
         </tr>
     </table>
     <br/>
-    <button onclick='sendData()'>Send Data</button>
+    <select id = "theSelection" style = "display:none;">
+        <option value = 0>Left Rienmann Sum</option>
+        <option value = 1>Right Rienmann Sum</option>
+        <option value = 2>Midpoint Rienmann Sum</option>
+        <option value = 3>Trapezoidal Rienmann Sum</option>
+    </select>
+    <button onclick='sendData()' id = "sendDataButton" style = "display:none;">Send Data</button>
+    <div id = 'results'></div>
+    <br/>
+    <form id = "getTheData" style = "display:none;">
+        Enter Player 1 Name: <input id = "player1Name" type = "text"/>
+        <br/>
+        Enter Player 2 Name: <input id = "player2Name" type = "text"/>
+        <br/>
+        <button id = "startGameButton" style = "display:none;" onclick = "startGame()">Start The Game!</button>
+    </form>
 </body>
 </html>
