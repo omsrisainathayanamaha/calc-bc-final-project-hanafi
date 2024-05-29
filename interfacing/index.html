@@ -94,8 +94,14 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var element = document.getElementById('theBody');
-                    element.innerHTML += (xhr.responseText);
-                    reload('theBody');
+                    var bodyContent = element.innerHTML;
+                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id = 'graph'>"));
+                    //xhr.responseText
+                    document.write(bodyContent);
+                    document.write("<div id = 'graph'>")
+                    document.write(xhr.responseText);
+                    document.write("</div>");
+
                     
                 }
             };
@@ -122,7 +128,7 @@
         <option value=1>Game</option>
     </select><br/>
     <button onclick='doSubmit()' id = "submitOptions">Submit!</button>
-    <p id = "getRowAmount" style = "display:none;"><input id = "numberOfElements"/><br/><button onclick = "calculatorStarterTwo(document.getElementById('numberOfElements').value)">Submit!</button></p>
+    <p id = "getRowAmount" style = "display:none;">How many elements in the table?<input id = "numberOfElements"/><br/><button onclick = "calculatorStarterTwo(document.getElementById('numberOfElements').value)">Submit!</button></p>
     <br/><br/>
     <table id='theInputTable' style = "display:none;">
         <tr>
@@ -138,7 +144,7 @@
         <option value = 3>Trapezoidal Rienmann Sum</option>
     </select>
     <button onclick='sendData()' id = "sendDataButton" style = "display:none;">Send Data</button>
-    <div id = 'results'></div>
+    <div id = 'graph'></div>
     <br/>
     <form id = "getTheData" style = "display:none;">
         Enter Player 1 Name: <input id = "player1Name" type = "text"/>
