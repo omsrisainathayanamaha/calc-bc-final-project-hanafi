@@ -4,6 +4,19 @@
     <script>
         const HIDDEN = "display:none;";
         const SHOWN = "display:block;";
+        const PLAYER_1_LEFT = "A";
+        const PLAYER_1_RIGHT = 'S';
+        const PLAYER_1_MIDPOINT = 'D';
+        const PLAYER_1_TRAPEZOIDAL = 'F';
+        const PLAYER_2_LEFT = "J";
+        const PLAYER_2_RIGHT = "K";
+        const PLAYER_2_MIDPOINT = "L";
+        const PLAYER_2_TRAPEZOIDAL = ";";
+        const LEFT = 0;
+        const RIGHT = 1;
+        const MIDPOINT = 2;
+        const TRAPEZOIDAL = 3;
+
         function doSubmit() {
             var selectMe = document.getElementById('selectme');
             var inputTable = document.getElementById('theInputTable');
@@ -111,9 +124,42 @@
         {
             var name1Element = document.getElementById("player1Name"); //the element for name1
             var name2Element = document.getElementById("player2Name"); //the element for name2
+            var selectMe = document.getElementById('selectme');
+            var inputTable = document.getElementById('theInputTable');
+            var rienmannSelection = document.getElementById("theSelection");
+            var sendDataButton = document.getElementById("sendDataButton");
+            var playerNameTable = document.getElementById("getTheData");
+            var startGameButton = document.getElementById("startGameButton");
+            var submitButton = document.getElementById("submitOptions");
+            var mainHeader = document.getElementById("headerMain");
+            var calculatorRowAmountGetter = document.getElementById("getRowAmount");
+            var graph = document.getElementById("graph");
+            
+            playerNameTable.style = HIDDEN;
+            graph.style = HIDDEN;
+
             
             var name1 = name1Element.value;
             var name2 = name2Element.value;
+            var data = {"isGame": '', "name1":name1, "name2":name2};
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submit", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var element = document.getElementById('theBody');
+                    var bodyContent = element.innerHTML;
+                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id = 'graph'>"));
+                    //xhr.responseText
+                    document.write(bodyContent);
+                    document.write("<div id = 'graph'>")
+                    document.write(xhr.responseText);
+                    document.write("</div>");
+
+                    
+                }
+            };
+            xhr.send(JSON.stringify(data));
 
             
             

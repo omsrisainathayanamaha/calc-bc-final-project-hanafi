@@ -9,7 +9,10 @@ import json
 import backendgame.Tableality as Tableality
 from backendgame.Tableality import Table
 import os
-
+from backendgame.PlayersAndGame import Player as Player
+from backendgame.PlayersAndGame import Game as Game
+from backendgame import PlayersAndGame
+from random import randint
 hostName = "localhost" #replace with the ip of the runner
 serverPort = 8080
 
@@ -27,31 +30,39 @@ class MyServer(BaseHTTPRequestHandler):
             data = json.loads(post_data)
             print("Received data:", data)  # Here you can process the data as needed
             
-            xArr, yArr, id = self.parse_data(data)
+            xArr, yArr, id, isGame, name1, name2 = self.parse_data(data)
+            myGame = None
+            figure = plt.figure()
             #print("xArr:", xArr)
             #print("yArr:", yArr)
-            myTable = Table(xArr, yArr)
-            startIndex = 0
-            endIndex = len(xArr)-1
-            figure = plt.figure()
-            self.send_response(200)
-            #self.send_header("Content-type", "application/json")
-            #self.end_headers()
-            #response = {"status": "success", "xArr": xArr, "yArr": yArr}
-            #self.wfile.write(bytes(json.dumps(response), "utf-8"))
-            myTable.plot()
-            match id:
-                case 0:
-                    Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
-                case 1:
-                    Tableality.tableRightRectangle(myTable, startIndex, endIndex)
-                case 2:
-                    Tableality.tableMidpointRectangle(myTable, startIndex, endIndex)
-                case 3:
-                    Tableality.tableTrapezoids(myTable, startIndex, endIndex)
-            #Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
+            if(not isGame):
+                myTable = Table(xArr, yArr)
+                startIndex = 0
+                endIndex = len(xArr)-1
+                
+                self.send_response(200)
+            
+                myTable.plot()
+                match id:
+                    case 0:
+                        Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
+                    case 1:
+                        Tableality.tableRightRectangle(myTable, startIndex, endIndex)
+                    case 2:
+                        Tableality.tableMidpointRectangle(myTable, startIndex, endIndex)
+                    case 3:
+                        Tableality.tableTrapezoids(myTable, startIndex, endIndex)
+            
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+            else:
+                player1 = Player(name1)
+                player2 = Player(name2)
+                myGame = Game(player1, player2)
+                myGame.readyPlayers()
+                myGame.generateFunction(randint(2,6))
+                
+                
             htmlToUse = mpld3.fig_to_html(figure, d3_url=None, mpld3_url=None, no_extras=False, template_type='general', figid=None, use_http=False) 
             htmlToUse = htmlToUse.replace("<html>", "")
             htmlToUse = htmlToUse.replace("</html>", "")
@@ -69,6 +80,9 @@ class MyServer(BaseHTTPRequestHandler):
         xArr = []
         yArr = []
         rienmannId = 0
+        isGame = False
+        name1 = ''
+        name2 = ''
         for key, value in data.items():
             if key.startswith('x'):
                 xArr.append(float(value))
@@ -76,7 +90,13 @@ class MyServer(BaseHTTPRequestHandler):
                 yArr.append(float(value))
             elif key.startswith('rienmann'):
                 rienmannId = int(value)
-        return xArr, yArr, rienmannId
+            elif key.startswith('isGa'):
+                isGame = True
+            elif key == 'name1':
+                name1 = value
+            elif key == 'name2':
+                name2 = value
+        return xArr, yArr, rienmannId, isGame, name1, name2
 
     def html_content(self):
         # Ensure the correct path to the file
