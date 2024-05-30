@@ -1,16 +1,15 @@
-#https://stackoverflow.com/questions/49684811/display-matplotlib-graph-in-browser
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
 import mpld3
-import matplotlib
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 import json
-import backendgame.Tableality as Tableality
-from backendgame.Tableality import Table
 import os
+from random import randint
+from backendgame import Tableality as Tableality
+from backendgame.Tableality import Table
+from backendgame.PlayersAndGame import Player, Game
 
-hostName = "localhost" #replace with the ip of the runner
+hostName = "localhost"  # replace with the IP of the runner
 serverPort = 8080
 
 class MyServer(BaseHTTPRequestHandler):
@@ -25,64 +24,88 @@ class MyServer(BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
             data = json.loads(post_data)
-            print("Received data:", data)  # Here you can process the data as needed
-            
-            xArr, yArr, id = self.parse_data(data)
-            #print("xArr:", xArr)
-            #print("yArr:", yArr)
-            myTable = Table(xArr, yArr)
-            startIndex = 0
-            endIndex = len(xArr)-1
-            figure = plt.figure()
+            print("Received data:", data)
+
+            xArr, yArr, rienmannId, isGame, name1, name2 = self.parse_data(data)
+
+            figure, html_content = self.generate_plot(xArr, yArr, rienmannId, isGame, name1, name2)
+
             self.send_response(200)
-            #self.send_header("Content-type", "application/json")
-            #self.end_headers()
-            #response = {"status": "success", "xArr": xArr, "yArr": yArr}
-            #self.wfile.write(bytes(json.dumps(response), "utf-8"))
-            myTable.plot()
-            match id:
-                case 0:
-                    Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
-                case 1:
-                    Tableality.tableRightRectangle(myTable, startIndex, endIndex)
-                case 2:
-                    Tableality.tableMidpointRectangle(myTable, startIndex, endIndex)
-                case 3:
-                    Tableality.tableTrapezoids(myTable, startIndex, endIndex)
-            #Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            htmlToUse = mpld3.fig_to_html(figure, d3_url=None, mpld3_url=None, no_extras=False, template_type='general', figid=None, use_http=False) 
-            htmlToUse = htmlToUse.replace("<html>", "")
-            htmlToUse = htmlToUse.replace("</html>", "")
-            htmlToUse=htmlToUse.replace("<head>", "")
-            htmlToUse=htmlToUse.replace("</head>", "")
-            htmlToUse=htmlToUse.replace("<body>", "")
-            htmlToUse=htmlToUse.replace("</body>", "")
-            plt.ion()
-            self.wfile.write (bytes(htmlToUse,"utf-8"))
+            self.wfile.write(bytes(html_content, "utf-8"))
 
+    def generate_plot(self, xArr, yArr, rienmannId, isGame, name1, name2):
+        figure = plt.figure()
+        appendages = ""
+
+        if not isGame:
+            myTable = Table(xArr, yArr)
+            startIndex = 0
+            endIndex = len(xArr) - 1
+
+            myTable.plot()
+            if rienmannId == 0:
+                Tableality.tableLeftRectangle(myTable, startIndex, endIndex)
+            elif rienmannId == 1:
+                Tableality.tableRightRectangle(myTable, startIndex, endIndex)
+            elif rienmannId == 2:
+                Tableality.tableMidpointRectangle(myTable, startIndex, endIndex)
+            elif rienmannId == 3:
+                Tableality.tableTrapezoids(myTable, startIndex, endIndex)
+        else:
+            player1 = Player(name1)
+            player2 = Player(name2)
+            myGame = Game(player1, player2)
+            myGame.readyPlayers()
+            myGame.generateFunction(randint(2, 6))
+            myGame.setRandomCorrectAnswer()
+            myGame.plot()
             
+            myGame.makeNewBet()
+            myGame.player1.betPoints(myGame.currentBet)
+            myGame.player2.betPoints(myGame.currentBet)
+            appendages += f"<h3>{myGame.player1.name}: {myGame.player1.points}</h3>\n<br/>"
+            appendages += f"<h3>{myGame.player2.name}: {myGame.player2.points}</h3><br/>"
+            appendages += f"<h3> Pot: {myGame.pot}</h3>"
+        
+        plt.ion()
+        html_to_use = mpld3.fig_to_html(figure)
+        html_content = f"""
+        
+            {appendages}
+            {html_to_use}
             
+       
+        
+        """
+        #plt.close(figure)  # Close the figure to avoid memory issues
+        return figure, html_content
 
     def parse_data(self, data):
         xArr = []
         yArr = []
         rienmannId = 0
+        isGame = False
+        name1 = ''
+        name2 = ''
         for key, value in data.items():
             if key.startswith('x'):
                 xArr.append(float(value))
             elif key.startswith('y'):
                 yArr.append(float(value))
-            elif key.startswith('rienmann'):
+            elif key == 'rienmannId':
                 rienmannId = int(value)
-        return xArr, yArr, rienmannId
+            elif key == 'isGame':
+                isGame = True
+            elif key == 'name1':
+                name1 = value
+            elif key == 'name2':
+                name2 = value
+        return xArr, yArr, rienmannId, isGame, name1, name2
 
     def html_content(self):
-        # Ensure the correct path to the file
         file_path = os.path.join(os.path.dirname(__file__), 'index.html')
-
-        # Read the file contents safely
         try:
             with open(file_path, "r") as file:
                 content = file.read()
@@ -92,7 +115,7 @@ class MyServer(BaseHTTPRequestHandler):
         except Exception as e:
             return f"An error occurred: {e}"
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 

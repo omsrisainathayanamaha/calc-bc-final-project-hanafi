@@ -46,13 +46,14 @@ class Table: #A class that represents a table of values.
 #startIndex: the index of the x-value in the array to start the Rienmann Sum
 #endIndex: the index of the x-value in the array to end the Rienmann Sum
 def tableLeftRienmannSum(t:Table, startIndex:int, endIndex:int): #Returns a floating point number that is the left Rienmann Sum of the table t from the x-values x[startIndex] to x[endIndex]
-    x = t.getXValues()[startIndex:endIndex]   # starts at 
-    y = t.getYValues()[startIndex:endIndex]
+    x = t.getXValues()   # starts at 
+    y = t.getYValues()
     print(y)
     currentSum = 0
     index = 0
     for i in y:
         currentSum += (abs(x[index-1]-x[index]))*i #finds the difference between the two x values and multiplies it by the y
+        print(x[index-1], "X index-1", x[index], "X index")
         index += 1
     return currentSum
 
@@ -139,7 +140,7 @@ def tableRightRectangle(t:Table, startIndex:int, endIndex:int):
         plt.plot(xVerLine2, yVerLine)
         plt.plot(xHorLine1, yHorLine1)
         index-=-1
-    plt.title("Right Rienmann Sum of the Given Table" + str(tableRightRienmannSum(t,startIndex,endIndex)))
+    plt.title("Right Rienmann Sum of the Given Table: " + str(tableRightRienmannSum(t,startIndex,endIndex)))
 #Precondition: The table must have an intermediate value in between each set of two values.
 #Example:
 #In the table with xValues [1,3,4,5,6,7,8], the only section of the array tableMidpointRectangle() can use is [4,5,6,7,8].

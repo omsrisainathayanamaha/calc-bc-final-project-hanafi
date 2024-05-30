@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import Functionality as Functionality
+from backendgame import Functionality as Functionality
 #import Tableality
 from datetime import time
 from matplotlib import pyplot as plt
@@ -21,7 +21,7 @@ class Game:
         self.start = 0
         self.end = 5
         self.step = 0.25
-        self.currentBet:int = int(np.average([self.player1.points,self.player2.points])/10)
+        self.currentBet:int = 10 #placeholder
     def readyPlayers(self): #sets the player id and myGame attribute
         self.player1.setId(1)
         self.player2.setId(2)
@@ -32,12 +32,12 @@ class Game:
         #self.player3.setMyGame(self)
         #self.player4.setMyGame(self)
     def generateFunction(self, degree:int):
-        self.myFunction = Functionality.Function(np.randn(degree+1), degree)
+        self.myFunction = Functionality.Function(np.random.randint(0, 100, degree+1), degree)
     def setRandomCorrectAnswer(self):
         self.myCorrectAnswer = random.randint(0,3)
-    #Precondition: setRandomCorrectAnswer() and generateFunction(degree) must have been called before this method is called
+    #Precondition: setRandomCorrectAnswer() and generateFunction(degree) must have been called before this method is called. A current figure is extant.
     def plot(self):
-        self.myFunction.plot()
+        self.myFunction.plot(self.start, self.end)
         match(self.myCorrectAnswer):
             case 0:
                 Functionality.leftRectangleCreator(self.myFunction, self.step, self.start, self.end)
