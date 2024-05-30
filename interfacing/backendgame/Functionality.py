@@ -35,7 +35,7 @@ class Function:
             listThing.append(self.evalAtPoint(i)) #Appends the y value that corresponds to the x value
         return listThing
     def plot(self, start:float, end:float): #Plots the function. You must use plt.ion() after this method has been run
-        figure = plt.figure() #Creates a nonlinear figure
+        #figure = plt.figure() #Creates a nonlinear figure
         x = np.linspace(start, end, 100*(abs(end-start))) #Creates an array of 100 times the width of the full function evenly spaced x values between start and end
         plt.plot(x,self.multipleEvalAtPoint(x), '-') #Plots the x array on the x axis and an array with all the values of the function according to the x values on the y axis
 #Params:
@@ -96,7 +96,7 @@ def leftRectangleCreator(f:Function, step:float, start:float, end:float):
         plt.plot(xVerLine1, yVerLine)
         plt.plot(xVerLine2, yVerLine)
         plt.plot(xHorLine1, yHorLine1)
-    plt.title("Left Rienmann Sum of the Given Table: "+str(leftRienmannSum(f,step,start,end)))
+    plt.title("? Rienmann Sum of the Given Function: "+str(leftRienmannSum(f,step,start,end)))
         #Now adding the area of each rectangle to its center
         #a = fig.add_subplot()
         #fig.text(i/2, x/2, str(step*x))
@@ -120,7 +120,7 @@ def rightRectangleCreator(f:Function, step:float, start:float, end:float):
         plt.plot(xVerLine1, yVerLine)
         plt.plot(xVerLine2, yVerLine)
         plt.plot(xHorLine1, yHorLine1)
-    plt.title("Right Rienmann Sum of the Given Table: "+str(rightRienmannSum(f,step,start,end)))
+    plt.title("? Rienmann Sum of the Given Function: "+str(rightRienmannSum(f,step,start,end)))
 
         #a = fig.add_subplot()
         #fig.text(i/2, x/2, str(step*x))
@@ -144,7 +144,7 @@ def midpointRectangleCreator(f:Function,step:float,start:float,end:float):
         plt.plot(xVerLine1, yVerLine)
         plt.plot(xVerLine2, yVerLine)
         plt.plot(xHorLine1, yHorLine1)
-    plt.title("Midpoint Rienmann Sum of the Given Table: "+str(midpointRienmannSum(f,step,start,end)))
+    plt.title("? Rienmann Sum of the Given Function: "+str(midpointRienmannSum(f,step,start,end)))
 
         #a = fig.add_subplot()
        # fig.text(i/2, x/2, str(step*x))
@@ -171,7 +171,7 @@ def trapezoidCreator(f:Function, step:float, start:float, end:float):
         plt.plot(xVerLine1, yVerLine1)
         plt.plot(xVerLine2, yVerLine2)
         plt.plot(xHorLine, yHorLine)
-    plt.title("Trapezoidal Rienmann Sum of the Given Table: "+str(trapezoidalRienmannSum(f,step,start,end)))
+    plt.title("? Rienmann Sum of the Given Function: "+str(trapezoidalRienmannSum(f,step,start,end)))
         #a = fig.add_subplot()
         #fig.text(i/2, y1/2, str(step/2*(y1+y2)))
 

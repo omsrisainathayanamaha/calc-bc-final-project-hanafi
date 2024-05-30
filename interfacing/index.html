@@ -32,6 +32,12 @@
                 selectMe.style = HIDDEN;
                 calculatorRowAmountGetter.style = SHOWN;
                 submitButton.style = HIDDEN;
+            }else if(value == 1)
+            {
+                selectMe.style = HIDDEN;
+                submitButton.style = HIDDEN;
+                playerNameTable.style = SHOWN;
+                startGameButton.style = SHOWN;
             }
         }
         function calculatorStarterTwo(value)
@@ -50,6 +56,7 @@
             rienmannSelection.style = SHOWN;
             sendDataButton.style = SHOWN;
             calculatorRowAmountGetter.style = HIDDEN;
+            
             
         }
 
@@ -77,15 +84,6 @@
                 document.getElementById('theInputTable').appendChild(createTableRow('x' + i, 'y' + i));
             }
         }
-        function reload(id){
-    var container = document.getElementById(id);
-    var content = container.innerHTML;
-    container.innerHTML = "";
-    container.innerHTML= content; 
-    
-   //this line is to watch the result in console , you can remove it later	
-    console.log("Refreshed"); 
-}
 
         function sendData() {
             var table = document.getElementById('theInputTable');
@@ -108,20 +106,41 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var element = document.getElementById('theBody');
                     var bodyContent = element.innerHTML;
-                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id = 'graph'>"));
+                    console.log("BODY BEFORE MODS:"+bodyContent)
+                    console.log(bodyContent.indexOf("<div id"))
+                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id"));
                     //xhr.responseText
                     document.write(bodyContent);
+                    console.log("BODY"+bodyContent);
                     document.write("<div id = 'graph'>")
                     document.write(xhr.responseText);
                     document.write("</div>");
+                    var selectMe = document.getElementById('selectme');
+            var inputTable = document.getElementById('theInputTable');
+            var rienmannSelection = document.getElementById("theSelection");
+            var sendDataButton = document.getElementById("sendDataButton");
+            var playerNameTable = document.getElementById("getTheData");
+            var startGameButton = document.getElementById("startGameButton");
+            var submitButton = document.getElementById("submitOptions");
+            var mainHeader = document.getElementById("headerMain");
+            var calculatorRowAmountGetter = document.getElementById("getRowAmount");
+            inputTable.style = HIDDEN;
+            selectMe.style = SHOWN;
+            submitButton.style = SHOWN;
+            calculatorRowAmountGetter.style = HIDDEN;
+            rienmannSelection.style = HIDDEN;
+            sendDataButton.style = HIDDEN;
 
                     
                 }
             };
             xhr.send(JSON.stringify(data));
         }
-        function startGame()
+        
+        function startGame(event)
         {
+            event.preventDefault();
+            console.log("Start game triggered")
             var name1Element = document.getElementById("player1Name"); //the element for name1
             var name2Element = document.getElementById("player2Name"); //the element for name2
             var selectMe = document.getElementById('selectme');
@@ -134,29 +153,48 @@
             var mainHeader = document.getElementById("headerMain");
             var calculatorRowAmountGetter = document.getElementById("getRowAmount");
             var graph = document.getElementById("graph");
+            console.log("Variables declared in startGame")
             
-            playerNameTable.style = HIDDEN;
-            graph.style = HIDDEN;
+            graph.style = SHOWN;
+            console.log("Graph style set")
 
             
             var name1 = name1Element.value;
+            
             var name2 = name2Element.value;
-            var data = {"isGame": '', "name1":name1, "name2":name2};
+            console.log("Name elements read")
+            playerNameTable.style = HIDDEN;
+            var data = {"isGame": 'data', "name1":name1, "name2":name2};
+            console.log("Data created")
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/submit", true);
+            xhr.open("POST", "/submit");
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var element = document.getElementById('theBody');
+                    console.log(name1+name2+xhr.responseText)
                     var bodyContent = element.innerHTML;
-                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id = 'graph'>"));
+                    //console.log(bodyContent)
+                    
+                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id"));
                     //xhr.responseText
+                    document.body.id = "theBody";
                     document.write(bodyContent);
-                    document.write("<div id = 'graph'>")
+                    document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
+
+                    document.write("<div id = 'graph'>");
                     document.write(xhr.responseText);
                     document.write("</div>");
+                    document.body.onkeydown = handleOnKeyDown(event);
+                    function handleOnKeyDown(event)
+                    {
+                        console.log(event.key);
+                        console.log("a key was pressed")
+                    }
 
                     
+                }else if (xhr.readyState === 4) {
+                    console.error("Failed to receive response:", xhr.status, xhr.responseText);
                 }
             };
             xhr.send(JSON.stringify(data));
@@ -164,6 +202,33 @@
             
             
         }
+        
+       /*
+        function startGame(event) { //a new tester unworking
+    event.preventDefault();
+    var name1Element = document.getElementById("player1Name");
+    var name2Element = document.getElementById("player2Name");
+    var playerNameTable = document.getElementById("getTheData");
+    var graph = document.getElementById("graph");
+
+    var name1 = name1Element.value;
+    var name2 = name2Element.value;
+    var data = { "isGame": true, "name1": name1, "name2": name2 };
+
+    playerNameTable.style = HIDDEN;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/submit", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            graph.innerHTML = xhr.responseText;
+        }
+    };
+    xhr.send(JSON.stringify(data));
+}
+*/
+
     </script>
 </head>
 <body id = "theBody">
@@ -190,14 +255,15 @@
         <option value = 3>Trapezoidal Rienmann Sum</option>
     </select>
     <button onclick='sendData()' id = "sendDataButton" style = "display:none;">Send Data</button>
-    <div id = 'graph'></div>
+   
     <br/>
     <form id = "getTheData" style = "display:none;">
         Enter Player 1 Name: <input id = "player1Name" type = "text"/>
         <br/>
         Enter Player 2 Name: <input id = "player2Name" type = "text"/>
         <br/>
-        <button id = "startGameButton" style = "display:none;" onclick = "startGame()">Start The Game!</button>
+        <button id = "startGameButton" style = "display:none;" onclick = "startGame(event)">Start The Game!</button>
     </form>
+    <div id = 'graph'></div>
 </body>
 </html>
