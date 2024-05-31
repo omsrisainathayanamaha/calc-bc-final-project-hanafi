@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1, h3 {
+    text-align: center;
+}
+
+#headerMain {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+}
+
+#selectme, #numberOfElements, #theSelection, #player1Name, #player2Name {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    font-size: 16px;
+}
+
+#submitOptions, #sendDataButton, #startGameButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#submitOptions:hover, #sendDataButton:hover, #startGameButton:hover {
+    background-color: #45a049;
+}
+
+#getRowAmount {
+    text-align: center;
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+    max-width: 600px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#answers {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#player1, #player2 {
+    display: inline-block;
+    width: 40%;
+    margin: 20px;
+}
+
+#answers button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#answers button:hover {
+    background-color: #45a049;
+}
+
+#graph {
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+}

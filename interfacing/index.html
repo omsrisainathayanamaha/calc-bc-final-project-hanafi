@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+   
+    
     <script>
         const HIDDEN = "display:none;";
         const SHOWN = "display:block;";
@@ -16,7 +18,11 @@
         const RIGHT = 1;
         const MIDPOINT = 2;
         const TRAPEZOIDAL = 3;
-
+        const BUTTONSTOANSWER = "<div id = 'answers'> <div id = 'player1'> <h3>Player 1: Answer Here</h3> <button onclick='processGameAnswer(1, 0)'>Left Rienmann Sum</button> <button onclick = 'processGameAnswer(1, 1)'>Right Rienmann Sum</button><button onclick = 'processGameAnswer(1,2)'>Midpoint Rienmann Sum</button><button onclick = 'processGameAnswer(1,3)'>Trapezoidal Rienmann Sum</button></div><div id = 'player2'><h3>Player 2: Answer Here</h3><button onclick='processGameAnswer(2, 0)'>Left Rienmann Sum</button><button onclick = 'processGameAnswer(2, 1)'>Right Rienmann Sum</button><button onclick = 'processGameAnswer(2,2)'>Midpoint Rienmann Sum</button><button onclick = 'processGameAnswer(2,3)'>Trapezoidal Rienmann Sum</button></div></div>"
+        var identify = Math.round((Math.random()*10000000))+2;
+        const MY_IDENTIFIER = identify;
+        console.log(MY_IDENTIFIER)
+        var theIndexToStartSplicing = 0;
         function doSubmit() {
             var selectMe = document.getElementById('selectme');
             var inputTable = document.getElementById('theInputTable');
@@ -89,7 +95,7 @@
             var table = document.getElementById('theInputTable');
             var inputs = table.getElementsByTagName('input');
             var whichRienmann = document.getElementById("theSelection");
-            var data = {};
+            var data = {"identifier": MY_IDENTIFIER};
 
             for (var i = 0; i < inputs.length; i += 2) {
                 var xValue = inputs[i].value;
@@ -112,6 +118,7 @@
                     //xhr.responseText
                     document.write(bodyContent);
                     console.log("BODY"+bodyContent);
+                    document.write(BUTTONSTOANSWER)
                     document.write("<div id = 'graph'>")
                     document.write(xhr.responseText);
                     document.write("</div>");
@@ -135,6 +142,7 @@
                 }
             };
             xhr.send(JSON.stringify(data));
+            
         }
         
         function startGame(event)
@@ -164,7 +172,7 @@
             var name2 = name2Element.value;
             console.log("Name elements read")
             playerNameTable.style = HIDDEN;
-            var data = {"isGame": 'data', "name1":name1, "name2":name2};
+            var data = {"identifier": MY_IDENTIFIER,"isGame": 'data', "name1":name1, "name2":name2};
             console.log("Data created")
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/submit");
@@ -180,17 +188,15 @@
                     //xhr.responseText
                     document.body.id = "theBody";
                     document.write(bodyContent);
-                    document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
-
+                    //document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
+                    
                     document.write("<div id = 'graph'>");
                     document.write(xhr.responseText);
                     document.write("</div>");
-                    document.body.onkeydown = handleOnKeyDown(event);
-                    function handleOnKeyDown(event)
-                    {
-                        console.log(event.key);
-                        console.log("a key was pressed")
-                    }
+                    document.write(BUTTONSTOANSWER)
+
+                    document.getElementById("answers").style = SHOWN;
+                    theIndexToStartSplicing += xhr.responseText.length;
 
                     
                 }else if (xhr.readyState === 4) {
@@ -198,7 +204,7 @@
                 }
             };
             xhr.send(JSON.stringify(data));
-
+            alert("It may take up to a minute for data to load from the remote server!");
             
             
         }
@@ -228,10 +234,53 @@
     xhr.send(JSON.stringify(data));
 }
 */
+function processGameAnswer(player, option)
+{
+    document.getElementById("answers").style = HIDDEN;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/submit");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    var data = {"identifier": MY_IDENTIFIER, "player": player, "option": option}
+    xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var element = document.body;
+                    //console.log(name1+name2+xhr.responseText)
+                    var bodyContent = element.innerHTML;
+                    //console.log(bodyContent)
+                    
+                    bodyContent = bodyContent.substring(0, bodyContent.indexOf("<div id"));
+                    console.log(bodyContent)
+                    //xhr.responseText
+                    document.body.id = "theBody";
+                    //document.write(bodyContent);
+                    //document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
+                    document.getElementById("graph").remove()
+                    document.write("<div id = 'graph'>");
+                    document.write(xhr.responseText);
+                    //console.log(xhr.responseText)
+                    document.write("</div>");
+                    //document.write(BUTTONSTOANSWER);
+                    document.getElementById("answers").style = SHOWN;
+                    //theIndexToStartSplicing += xhr.responseText.length;
+                    
+
+                    
+                }else if (xhr.readyState === 4) {
+                    console.error("Failed to receive response:", xhr.status, xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify(data));
+            alert("It may take up to a minute for data to load from the remote server!");
+
+
+}
 
     </script>
 </head>
 <body id = "theBody">
+    <style src = "ready.css">
+       
+    </style>
     <h1 id = "headerMain">Select an option</h1>
     <br/>
     <select id='selectme'>
@@ -264,6 +313,22 @@
         <br/>
         <button id = "startGameButton" style = "display:none;" onclick = "startGame(event)">Start The Game!</button>
     </form>
+    <div id = "answers" style = "display:none;">
+        <div id = "player1">
+            <h3>Player 1: Answer Here</h3>
+            <button onclick="processGameAnswer(1, 0)">Left Rienmann Sum</button>
+            <button onclick = "processGameAnswer(1, 1)">Right Rienmann Sum</button>
+            <button onclick = "processGameAnswer(1,2)">Midpoint Rienmann Sum</button>
+            <button onclick = "processGameAnswer(1,3)">Trapezoidal Rienmann Sum</button>
+        </div>
+        <div id = "player2">
+            <h3>Player 2: Answer Here</h3>
+            <button onclick="processGameAnswer(2, 0)">Left Rienmann Sum</button>
+            <button onclick = "processGameAnswer(2, 1)">Right Rienmann Sum</button>
+            <button onclick = "processGameAnswer(2,2)">Midpoint Rienmann Sum</button>
+            <button onclick = "processGameAnswer(2,3)">Trapezoidal Rienmann Sum</button>
+        </div>
+    </div>
     <div id = 'graph'></div>
 </body>
 </html>
