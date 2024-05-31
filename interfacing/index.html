@@ -18,7 +18,7 @@
         const RIGHT = 1;
         const MIDPOINT = 2;
         const TRAPEZOIDAL = 3;
-        const BUTTONSTOANSWER = "<div id = 'answers'> <div id = 'player1'> <h3>Player 1: Answer Here</h3> <button onclick='processGameAnswer(1, 0)'>Left Rienmann Sum</button> <button onclick = 'processGameAnswer(1, 1)'>Right Rienmann Sum</button><button onclick = 'processGameAnswer(1,2)'>Midpoint Rienmann Sum</button><button onclick = 'processGameAnswer(1,3)'>Trapezoidal Rienmann Sum</button></div><div id = 'player2'><h3>Player 2: Answer Here</h3><button onclick='processGameAnswer(2, 0)'>Left Rienmann Sum</button><button onclick = 'processGameAnswer(2, 1)'>Right Rienmann Sum</button><button onclick = 'processGameAnswer(2,2)'>Midpoint Rienmann Sum</button><button onclick = 'processGameAnswer(2,3)'>Trapezoidal Rienmann Sum</button></div></div>"
+        const BUTTONSTOANSWER = "<div id = 'answers'> <div id = 'player1'> <h3>Player 1: Answer Here</h3> <button onclick='processGameAnswer(1, 0)' id = 'oneleft'>Left Rienmann Sum</button> <button onclick = 'processGameAnswer(1, 1)' id = 'oneright'>Right Rienmann Sum</button><button onclick = 'processGameAnswer(1,2)' id = 'onemid'>Midpoint Rienmann Sum</button><button onclick = 'processGameAnswer(1,3)' id = 'onetrap'>Trapezoidal Rienmann Sum</button></div><div id = 'player2'><h3>Player 2: Answer Here</h3><button onclick='processGameAnswer(2, 0)' id = 'twoleft'>Left Rienmann Sum</button><button onclick = 'processGameAnswer(2, 1)' id = 'tworight'>Right Rienmann Sum</button><button onclick = 'processGameAnswer(2,2)' id = 'twomid'>Midpoint Rienmann Sum</button><button onclick = 'processGameAnswer(2,3)' id = 'twotrap'>Trapezoidal Rienmann Sum</button></div></div>"
         var identify = Math.round((Math.random()*10000000))+2;
         const MY_IDENTIFIER = identify;
         console.log(MY_IDENTIFIER)
@@ -118,7 +118,7 @@
                     //xhr.responseText
                     document.write(bodyContent);
                     console.log("BODY"+bodyContent);
-                    document.write(BUTTONSTOANSWER)
+                    document.write(BUTTONSTOANSWER);
                     document.write("<div id = 'graph'>")
                     document.write(xhr.responseText);
                     document.write("</div>");
@@ -189,11 +189,55 @@
                     document.body.id = "theBody";
                     document.write(bodyContent);
                     //document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
-                    
+                    document.body.onkeydown = function(ev)
+                    {
+                        key = ev.key;
+                        var oneLeft = document.getElementById("oneleft");
+                        var twoLeft = document.getElementById("twoleft");
+                        var oneRight = document.getElementById("oneright");
+                        var twoRight = document.getElementById("tworight");
+                        var oneMidpoint = document.getElementById("onemid");
+                        var twoMidpoint = document.getElementById("twomid");
+                        var oneTrapezoidal = document.getElementById("onetrap");
+                        var twoTrapezoidal = document.getElementById("twotrap")
+                        console.log("Key pressed: "+key)
+                        switch(key.toUpperCase())
+                        {
+                            case PLAYER_1_LEFT:
+                                oneLeft.click();
+                                break;
+                            case PLAYER_2_LEFT:
+                                twoLeft.click();
+                                break;
+                            case PLAYER_1_RIGHT:
+                                oneRight.click();
+                                break;
+                            case PLAYER_2_RIGHT:
+                                twoRight.click();
+                                break;
+                            case PLAYER_1_MIDPOINT:
+                                oneMidpoint.click();
+                                break;
+                            case PLAYER_2_MIDPOINT:
+                                twoMidpoint.click();
+                                break;
+                            case PLAYER_1_TRAPEZOIDAL:
+                                oneTrapezoidal.click();
+                                break;
+                            case PLAYER_2_TRAPEZOIDAL:
+                                twoTrapezoidal.click();
+                                break;
+                            default:
+                                alert("Invalid key pressed!");
+                            
+                        }
+                    }
                     document.write("<div id = 'graph'>");
                     document.write(xhr.responseText);
                     document.write("</div>");
                     document.write(BUTTONSTOANSWER)
+                    document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
+
 
                     document.getElementById("answers").style = SHOWN;
                     theIndexToStartSplicing += xhr.responseText.length;
@@ -253,10 +297,54 @@ function processGameAnswer(player, option)
                     //xhr.responseText
                     document.body.id = "theBody";
                     //document.write(bodyContent);
-                    //document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
+                    document.body.onkeydown = function(ev)
+                    {
+                        key = ev.key;
+                        var oneLeft = document.getElementById("oneleft");
+                        var twoLeft = document.getElementById("twoleft");
+                        var oneRight = document.getElementById("oneright");
+                        var twoRight = document.getElementById("tworight");
+                        var oneMidpoint = document.getElementById("onemid");
+                        var twoMidpoint = document.getElementById("twomid");
+                        var oneTrapezoidal = document.getElementById("onetrap");
+                        var twoTrapezoidal = document.getElementById("twotrap")
+                        console.log("Key pressed: "+key)
+                        switch(key.toUpperCase())
+                        {
+                            case PLAYER_1_LEFT:
+                                oneLeft.click();
+                                break;
+                            case PLAYER_2_LEFT:
+                                twoLeft.click();
+                                break;
+                            case PLAYER_1_RIGHT:
+                                oneRight.click();
+                                break;
+                            case PLAYER_2_RIGHT:
+                                twoRight.click();
+                                break;
+                            case PLAYER_1_MIDPOINT:
+                                oneMidpoint.click();
+                                break;
+                            case PLAYER_2_MIDPOINT:
+                                twoMidpoint.click();
+                                break;
+                            case PLAYER_1_TRAPEZOIDAL:
+                                oneTrapezoidal.click();
+                                break;
+                            case PLAYER_2_TRAPEZOIDAL:
+                                twoTrapezoidal.click();
+                                break;
+                            default:
+                                alert("Invalid key pressed!");
+                            
+                        }
+                    }
                     document.getElementById("graph").remove()
                     document.write("<div id = 'graph'>");
                     document.write(xhr.responseText);
+                    document.write("Player 1: Use A for left, S for right, D for midpoint, and F for trapezoidal.\n Player 2: Use ; for left, L for right, K for midpoint, and J for trapezoidal.");
+
                     //console.log(xhr.responseText)
                     document.write("</div>");
                     //document.write(BUTTONSTOANSWER);
@@ -278,8 +366,103 @@ function processGameAnswer(player, option)
     </script>
 </head>
 <body id = "theBody">
-    <style src = "ready.css">
-       
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1, h3 {
+    text-align: center;
+}
+
+#headerMain {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+}
+
+#selectme, #numberOfElements, #theSelection, #player1Name, #player2Name {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    font-size: 16px;
+}
+
+#submitOptions, #sendDataButton, #startGameButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#submitOptions:hover, #sendDataButton:hover, #startGameButton:hover {
+    background-color: #45a049;
+}
+
+#getRowAmount {
+    text-align: center;
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+    max-width: 600px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#answers {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#player1, #player2 {
+    display: inline-block;
+    width: 40%;
+    margin: 20px;
+}
+
+#answers button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#answers button:hover {
+    background-color: #45a049;
+}
+
+#graph {
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
     </style>
     <h1 id = "headerMain">Select an option</h1>
     <br/>
@@ -316,17 +499,17 @@ function processGameAnswer(player, option)
     <div id = "answers" style = "display:none;">
         <div id = "player1">
             <h3>Player 1: Answer Here</h3>
-            <button onclick="processGameAnswer(1, 0)">Left Rienmann Sum</button>
-            <button onclick = "processGameAnswer(1, 1)">Right Rienmann Sum</button>
-            <button onclick = "processGameAnswer(1,2)">Midpoint Rienmann Sum</button>
-            <button onclick = "processGameAnswer(1,3)">Trapezoidal Rienmann Sum</button>
+            <button onclick="processGameAnswer(1, 0)" id = "oneleft">Left Rienmann Sum</button>
+            <button onclick = "processGameAnswer(1, 1)" id = "oneright">Right Rienmann Sum</button>
+            <button onclick = "processGameAnswer(1,2)" id = "onemid">Midpoint Rienmann Sum</button>
+            <button onclick = "processGameAnswer(1,3)" id = "onetrap">Trapezoidal Rienmann Sum</button>
         </div>
         <div id = "player2">
             <h3>Player 2: Answer Here</h3>
-            <button onclick="processGameAnswer(2, 0)">Left Rienmann Sum</button>
-            <button onclick = "processGameAnswer(2, 1)">Right Rienmann Sum</button>
-            <button onclick = "processGameAnswer(2,2)">Midpoint Rienmann Sum</button>
-            <button onclick = "processGameAnswer(2,3)">Trapezoidal Rienmann Sum</button>
+            <button onclick="processGameAnswer(2, 0)" id = "twoleft">Left Rienmann Sum</button>
+            <button onclick = "processGameAnswer(2, 1)" id = "tworight">Right Rienmann Sum</button>
+            <button onclick = "processGameAnswer(2,2)" id = "twomid">Midpoint Rienmann Sum</button>
+            <button onclick = "processGameAnswer(2,3)" id = "twotrap">Trapezoidal Rienmann Sum</button>
         </div>
     </div>
     <div id = 'graph'></div>
