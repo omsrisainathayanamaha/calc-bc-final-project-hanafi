@@ -32,9 +32,12 @@ class Game:
         #self.player3.setMyGame(self)
         #self.player4.setMyGame(self)
     def generateFunction(self, degree:int):
-        self.myFunction = Functionality.Function(np.random.randint(0, 100, degree+1), degree)
+        arrayofstuff = np.random.randint(0, 100, degree+1)
+        self.myFunction = Functionality.Function(arrayofstuff, degree)
+        print(arrayofstuff)
     def setRandomCorrectAnswer(self):
         self.myCorrectAnswer = random.randint(0,3)
+        print("My correct", self.myCorrectAnswer)
     #Precondition: setRandomCorrectAnswer() and generateFunction(degree) must have been called before this method is called. A current figure is extant.
     def plot(self):
         self.myFunction.plot(self.start, self.end)
@@ -62,9 +65,14 @@ class Game:
     #Preconditions: plot(), generateFunction(degree), and setRandomCorrectAnswer() have all ran before awardInput(time1, time2, input1, input2)
     #Parameters: time1 is a time object of class time that represents when player1 buzzed in, time2 is a time object of class time that represents when player2 buzzed in
     #input1 is an integer on [0,3] that represents the answer of player1, input2 is an integer on [0,3] that represents the answer of player2
-    def awardInput(self, time1=time, time2=time, input1=int, input2=int):
+    def awardInput(self, time1:time=time(0, 0, 0), time2:time=time(0,0,0), input1=int, input2=int):
         isOneCorrect = self.isRightAnswer(input1)
         isTwoCorrect = self.isRightAnswer(input2)
+        if time1 == time(0,0,0):
+            time1 = time(time2.hour+1, time2.minute)
+        else:
+            time2 = time(time1.hour+1, time1.minute)
+        
         areBothCorrect = isOneCorrect and isTwoCorrect
         if areBothCorrect:
             if time1 < time2:
@@ -85,9 +93,9 @@ class Game:
             self.pot = 0
     def isWinnerReached(self): #returns the player who has won if a winner was reached, False otherwise
         if self.player1.points == 0:
-            return self.player2
+            return 2
         elif self.player2.points == 0:
-            return self.player1
+            return 1
         else:
             return False    
 class Player:
@@ -103,7 +111,9 @@ class Player:
     #Precondition: myGame must be set
     def betPoints(self, amount:int):
         if(self.points <= amount):
-            raise "Too many points bet!"
+            print( "Too many points bet!")
+            self.myGame.addPointsToPot(self.points)
+            self.points -= amount
         else:
             self.points -= amount
         
