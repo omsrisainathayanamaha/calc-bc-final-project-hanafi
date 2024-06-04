@@ -9,7 +9,7 @@ from backendgame import Tableality as Tableality
 from backendgame.Tableality import Table
 from backendgame.PlayersAndGame import Player, Game
 
-hostName = "localhost"  # replace with the IP of the runner
+hostName = "10.7.131.245"  # replace with the IP of the runner
 serverPort = 8080
 #myGame = Game(Player("default"), Player("default2"))
 class BrowserSesh():
@@ -26,6 +26,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
+        print("Starting to write")
         self.wfile.write(bytes(self.html_content(), "utf-8"))
 
     def do_POST(self):
